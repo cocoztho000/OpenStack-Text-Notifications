@@ -1,0 +1,78 @@
+https://www.youtube.com/watch?v=_80H2WIuA7w
+
+sudo apt-get install apache2 mysql-client mysql-server
+
+sudo apt-get install libapache2-mod-wsgi
+
+sudo a2enmod wsgi
+
+cd /var/www
+
+sudo mkdir FlaskApp
+
+cd FlaskApp
+
+sudo mkdir FlaskApp
+
+cd FlaskApp
+
+sudo mkdir static
+
+sudo mkdir templates
+
+sudo nano __init__.py
+
+	from flask import Flask, request
+
+	app = Flask(__name__)
+
+	@app.route("/receive_sms/", methods=['GET','POST'])
+	def receive_sms():
+	    # Sender's phone numer
+	    from_number = request.values.get('From')
+	    # Receiver's phone number - Plivo number
+	    to_number = request.values.get('To')
+	    # The text which was received
+	    text = request.values.get('Text')
+
+	    # Print the message
+	    print 'Message received - From: %s, To: %s, Text: %s' % (from_number, to_number, text)
+
+	    return "Message received", 200
+
+	if __name__ == "__main__":
+	    app.run(host='0.0.0.0', port=80)
+
+sudo apt-get install python-pip
+sudo pip install --upgrade pip
+sudo reboot
+sudo pip install virtualenv
+
+virtaulenv venv
+
+source venv/bin/activate
+
+sudo pip install Flask
+
+
+service apache2 reload
+
+sudo a2ensite FlaskApp
+
+cd /var/www/FlaskApp/
+
+sudo nano flaskapp.wsgi
+
+	#! /user/bin/python
+
+	import sys
+	import logging
+
+	logging.basicConfig(stream=sys.stderr)
+	sys.path.instert(0,'var/www/FlaskApp/')
+
+	from FlaskApp import app as application
+	application.secret_key = 'tomiscool'
+
+sudo service apache2 restart
+
